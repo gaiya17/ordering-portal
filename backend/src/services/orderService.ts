@@ -47,5 +47,28 @@ export const OrderService = {
 
     if (error) throw error;
     return data;
+  },
+
+  async updateOrder(id: string, updates: Partial<OrderRequest>) {
+    const { data, error } = await supabase
+      .from('orders')
+      .update(updates)
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  },
+
+  async deleteOrder(id: string) {
+    const { error } = await supabase
+      .from('orders')
+      .delete()
+      .eq('id', id);
+
+    if (error) throw error;
+    return true;
   }
+
 };
