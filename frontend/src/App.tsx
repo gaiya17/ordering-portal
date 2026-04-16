@@ -1,7 +1,15 @@
+/**
+ * Main Application Component
+ * Provides a complete order management interface with CRUD operations.
+ * Features include order creation, editing, deletion, and status management.
+ */
+
 import { useEffect, useState } from 'react';
 import { getOrders, createOrder, deleteOrder, updateOrder } from './services/api';
 
-// Interface for Type Safety
+/**
+ * Order interface for type safety
+ */
 interface Order {
   id: string;
   customer_name: string;
@@ -12,6 +20,9 @@ interface Order {
   status: 'pending' | 'completed' | 'cancelled';
 }
 
+/**
+ * Main App component managing order state and UI
+ */
 function App() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
@@ -23,13 +34,16 @@ function App() {
     unit_price: 0
   });
 
+  /**
+   * Loads orders from the API and updates state
+   */
   const loadOrders = async () => {
     try {
       setLoading(true);
       const data = await getOrders();
       setOrders(data);
     } catch (err) {
-      console.error("Fetch error:", err);
+      console.error('Fetch error:', err);
     } finally {
       setLoading(false);
     }
@@ -39,19 +53,22 @@ function App() {
     loadOrders();
   }, []);
 
+  /**
+   * Handles form submission for creating or updating orders
+   */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       if (editingId) {
-        // UPDATE Existing Order
+        // Update existing order
         await updateOrder(editingId, formData);
         setEditingId(null);
       } else {
-        // CREATE New Order
+        // Create new order
         await createOrder(formData);
       }
-      
-      // Reset form and refresh list
+
+      // Reset form and refresh orders
       setFormData({ customer_name: '', product_name: '', quantity: 1, unit_price: 0 });
       await loadOrders();
     } catch (err: any) {
@@ -59,6 +76,9 @@ function App() {
     }
   };
 
+  /**
+   * Initiates editing mode for an order
+   */
   const handleEdit = (order: Order) => {
     setEditingId(order.id);
     setFormData({
@@ -71,8 +91,11 @@ function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  /**
+   * Handles order deletion with confirmation
+   */
   const handleDelete = async (id: string) => {
-    if (window.confirm("Are you sure you want to delete this order?")) {
+    if (window.confirm('Are you sure you want to delete this order?')) {
       try {
         await deleteOrder(id);
         await loadOrders();
@@ -82,6 +105,9 @@ function App() {
     }
   };
 
+  /**
+   * Toggles order status between pending and completed
+   */
   const handleStatusToggle = async (id: string, currentStatus: string) => {
     try {
       const nextStatus = currentStatus === 'pending' ? 'completed' : 'pending';
@@ -98,7 +124,7 @@ function App() {
         <header className="mb-10 flex flex-col md:flex-row md:justify-between md:items-end gap-4">
           <div>
             <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight">Order Portal</h1>
-            <p className="text-slate-500 mt-1 italic">Senior Developer Assessment / Sprint 5 Final</p>
+            <p className="text-slate-500 mt-1 italic">Add you products here..</p>
           </div>
           <div className="text-right">
             <span className="text-xs font-bold uppercase tracking-widest text-indigo-600 bg-indigo-50 px-4 py-2 rounded-full border border-indigo-100">

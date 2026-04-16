@@ -1,70 +1,65 @@
-import { OrderService } from '../services/orderService.js';
-
 /**
  * OrderService Test Suite
- * * Focus: Business Logic Validation & CRUD Lifecycle
- * Note: These tests interact with the Supabase instance defined in the config.
+ * Tests business logic validation and CRUD operations for order management.
+ * Note: These tests interact with the configured Supabase instance.
  */
+
+import { OrderService } from '../services/orderService.js';
+
 describe('OrderService Logic', () => {
-  
-  // Track created IDs to clean up after tests if necessary
+  // Track created order ID for cleanup in subsequent tests
   let createdOrderId: string;
 
   /**
-   * 1. VALIDATION TEST
-   * Ensures the service layer blocks invalid business data before hitting the DB.
+   * Validation Test: Ensures service blocks invalid quantity values
    */
   it('should throw an error if the order quantity is less than 1', async () => {
-    const badOrder = {
-      customer_name: "Test User",
-      product_name: "Invalid Item",
+    const invalidOrder = {
+      customer_name: 'Test User',
+      product_name: 'Invalid Item',
       quantity: 0,
       unit_price: 100
     };
 
-    await expect(OrderService.createOrder(badOrder))
-      .rejects.toThrow("Quantity must be at least 1");
+    await expect(OrderService.createOrder(invalidOrder))
+      .rejects.toThrow('Quantity must be at least 1');
   });
 
   /**
-   * 2. CREATE TEST (Happy Path)
-   * Verifies that valid data is correctly persisted and returned.
+   * Create Test: Verifies successful order creation and data persistence
    */
   it('should successfully create an order and return the record', async () => {
     const validOrder = {
-      customer_name: "Automated Test",
-      product_name: "Test Unit",
+      customer_name: 'Automated Test',
+      product_name: 'Test Unit',
       quantity: 2,
       unit_price: 500
     };
 
     const result = await OrderService.createOrder(validOrder);
-    
+
     expect(result).toBeDefined();
-    expect(result.customer_name).toBe("Automated Test");
-    expect(Number(result.total_price)).toBe(1000); // Verify DB calculation logic
-    
-    createdOrderId = result.id; // Store ID for subsequent lifecycle tests
+    expect(result.customer_name).toBe('Automated Test');
+    expect(Number(result.total_price)).toBe(1000); // Verify database calculation
+
+    createdOrderId = result.id; // Store ID for subsequent tests
   });
 
   /**
-   * 3. UPDATE TEST
-   * Verifies that existing records can be modified.
+   * Update Test: Verifies order modification functionality
    */
   it('should successfully update an existing order', async () => {
-    // Ensure we have an ID from the previous test
     if (!createdOrderId) return;
 
-    const updates = { product_name: "Updated Test Unit" };
+    const updates = { product_name: 'Updated Test Unit' };
     const result = await OrderService.updateOrder(createdOrderId, updates);
 
     expect(result).toBeDefined();
-    expect(result.product_name).toBe("Updated Test Unit");
+    expect(result.product_name).toBe('Updated Test Unit');
   });
 
   /**
-   * 4. DELETE TEST
-   * Verifies the removal of records from the system.
+   * Delete Test: Verifies order deletion functionality
    */
   it('should successfully delete an order', async () => {
     if (!createdOrderId) return;
@@ -72,5 +67,4 @@ describe('OrderService Logic', () => {
     const result = await OrderService.deleteOrder(createdOrderId);
     expect(result).toBe(true);
   });
-
 });

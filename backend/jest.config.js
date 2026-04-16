@@ -1,3 +1,8 @@
+/**
+ * Jest Configuration
+ * Configures Jest for TypeScript and ESM support in the backend.
+ */
+
 export default {
   preset: 'ts-jest/presets/default-esm',
   testEnvironment: 'node',

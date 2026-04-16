@@ -13,6 +13,41 @@ The system allows users to manage a catalog of orders with real-time database sy
 - **Testing:** Jest & ts-jest (Unit Testing)
 - **Runtime:** tsx (Modern TypeScript execution)
 
+## 📁 Project Structure
+
+```
+ordering-portal/
+├── backend/                          # Node.js/Express backend
+│   ├── src/
+│   │   ├── config/                   # Configuration files
+│   │   │   └── supabase.ts          # Supabase client setup
+│   │   ├── controllers/             # HTTP request handlers
+│   │   │   └── orderController.ts   # Order CRUD operations
+│   │   ├── services/                # Business logic layer
+│   │   │   └── orderService.ts      # Order service with validation
+│   │   ├── tests/                   # Unit tests
+│   │   │   └── orderService.test.ts # Service layer tests
+│   │   └── index.ts                 # Server entry point
+│   ├── package.json
+│   ├── tsconfig.json
+│   └── jest.config.js
+├── frontend/                         # React frontend
+│   ├── src/
+│   │   ├── services/                # API client
+│   │   │   └── api.ts               # HTTP client functions
+│   │   ├── App.tsx                  # Main application component
+│   │   ├── main.tsx                 # React entry point
+│   │   ├── index.css                # Global styles
+│   │   └── App.css                  # Component styles
+│   ├── index.html                   # HTML template
+│   ├── vite.config.ts               # Vite configuration
+│   ├── tailwind.config.js           # Tailwind CSS config
+│   ├── postcss.config.js            # PostCSS configuration
+│   ├── eslint.config.js             # ESLint configuration
+│   └── package.json
+└── README.md                         # Project documentation
+```
+
 ---
 
 ## 🏗️ Architectural Decisions
